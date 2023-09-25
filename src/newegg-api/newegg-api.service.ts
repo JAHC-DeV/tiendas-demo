@@ -3,13 +3,15 @@ import { SearchRequestDto } from 'src/Models/Dto/SearchRequestDto';
 import { ProductModel } from 'src/Models/ProductModel';
 import cheerio from 'cheerio'
 import { SearchResponseDto } from 'src/Models/Dto/SearchResponseDto';
+import { HttpResponseWrapper } from 'src/Models/HttpResponseWrapper';
 
 @Injectable()
 export class NeweggApiService {
 
-    async getRecomProducts(): Promise<Array<ProductModel>> {
+    async getRecomProducts<T>(): Promise<HttpResponseWrapper<T>> {
+        let result;
         try {
-            const result = await fetch("https://ec-apis.newegg.com/api/adapterex/Jpf/page?access_token=7jkHJ5AnrYurScqHBunHm7dbajcJes91O4mKohx8&CountryCode=USA&CompanyCode=1003&LanguageCode=en-us", {
+            result = await fetch("https://ec-apis.newegg.com/api/adapterex/Jpf/page?access_token=7jkHJ5AnrYurScqHBunHm7dbajcJes91O4mKohx8&CountryCode=USA&CompanyCode=1003&LanguageCode=en-us", {
                 "headers": {
                     "accept": "application/json",
                     "accept-language": "es,es-ES;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -30,15 +32,24 @@ export class NeweggApiService {
             })
             const data = await result.json();
             const prods = await ProductModel.GetArrayModel(data.Modules[0].RecommendItems);
-            return prods;
+            const response = new HttpResponseWrapper<T>();
+            response.Content = prods as T;
+            response.Error = false;
+            response.StatusCode = result.status;
+            return response;
         } catch (error) {
-            console.log(error)
-            return null
+
+            const response = new HttpResponseWrapper<T>();
+            response.Content = null;
+            response.Error = true;
+            response.StatusCode = 500;
+            return response;
         }
     }
-    async getRecomProductsWithConfig(keywords: string): Promise<Array<ProductModel>> {
+    async getRecomProductsWithConfig<T>(keywords: string): Promise<HttpResponseWrapper<T>> {
+        let result;
         try {
-            const result = await fetch(`https://www.newegg.com/api/RecommendationWithConfig?settingposition=bottom&mode=page&sponsored=true&product=true&campaign=false&article=false&subcategory=false&combo=false&viewitems=&keywords=${keywords}&existingitemlist=1FT-000M-003A1%2C20-313-310%2C9SIACCUBXU7296%2C19-113-786%2C9SIAUSRHJ88878%2C9SIAE4NJSE9468%2C34-156-173%2C24-025-915%2C34-360-287%2C9SIB2A3HDA2919%2C9SIB2A3HD97974%2C9SIB2A3GMM0195%2C9SIABU5E5E6302%2C20-331-073%2C9SIBN6WJXU1452%2C9SIB2BJG047884%2C9SIAJ09G9U0438&isproductionversion=true&isMixResult=true`, {
+            result = await fetch(`https://www.newegg.com/api/RecommendationWithConfig?settingposition=bottom&mode=page&sponsored=true&product=true&campaign=false&article=false&subcategory=false&combo=false&viewitems=&keywords=${keywords}&existingitemlist=1FT-000M-003A1%2C20-313-310%2C9SIACCUBXU7296%2C19-113-786%2C9SIAUSRHJ88878%2C9SIAE4NJSE9468%2C34-156-173%2C24-025-915%2C34-360-287%2C9SIB2A3HDA2919%2C9SIB2A3HD97974%2C9SIB2A3GMM0195%2C9SIABU5E5E6302%2C20-331-073%2C9SIBN6WJXU1452%2C9SIB2BJG047884%2C9SIAJ09G9U0438&isproductionversion=true&isMixResult=true`, {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
                     "accept-language": "es,es-ES;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -58,9 +69,17 @@ export class NeweggApiService {
             });
             const data = await result.json();
             const prods = await ProductModel.GetArrayModel(data.Modules[0].RecommendItems);
-            return prods;
+            const response = new HttpResponseWrapper<T>();
+            response.Content = prods as T;
+            response.Error = false;
+            response.StatusCode = result.status;
+            return response;
         } catch (error) {
-            return null
+            const response = new HttpResponseWrapper<T>();
+            response.Content = null;
+            response.Error = true;
+            response.StatusCode = 500;
+            return response;
         }
     }
 
@@ -123,7 +142,7 @@ export class NeweggApiService {
             product.sku = $(el).children("div").attr("id");
             if (product.sku != null && product.price != null && product.price != 0 && product.name != null && product.name != "") {
                 res.products.push(product);
-            }else{
+            } else {
                 //console.log("saltado", product)
             }
         })
