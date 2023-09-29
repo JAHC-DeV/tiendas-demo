@@ -12,7 +12,6 @@ export class AmazonApiController {
     try {
       console.log("LLego esto")
       const products = await this.service.searchProducts(req);
-      console.log("aaaa")
       return res.status(200).json(products.products);
     } catch (error) {
       return res.status(500).json({ msg: 'Ocurrió un error interno del servidor.' })
