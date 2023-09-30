@@ -8,9 +8,10 @@ import { RolesModule } from './roles/roles.module';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from './global/email/email.service';
 import { EmailModule } from './global/email/email.module';
+import { FileUploadService } from './global/supabase/fileUpload.service';
 
 @Module({
   imports: [NeweggApiModule, AmazonApiModule, UsersModule,DatabaseModule, AuthModule, RolesModule],
-  providers:[EmailService]
+  providers:[EmailService,FileUploadService]
 })
 export class AppModule {}

@@ -1,12 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterDto } from './Dto/RegisterDto';
 import { NeedLoginGuard } from 'src/Guard/needLogin.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { OnlyAdmin } from 'src/Guard/onlyAdmin.guard';
 import { AssingRoleDto } from './Dto/AssingRoleDto';
-import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/global/email/email.service';
+
 
 @Controller('users')
 export class UsersController {
@@ -19,6 +19,7 @@ export class UsersController {
   }
 
   @Post()
+
   async createUser(@Body(ValidationPipe) userData: RegisterDto) {
     return await this.service.createUser(userData)
   }
@@ -37,5 +38,5 @@ export class UsersController {
     this.service.removeUser(id);
   }
 
-
+  
 }

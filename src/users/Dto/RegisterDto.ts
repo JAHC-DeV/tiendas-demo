@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty } from "class-validator";
-
+import { Express } from 'express';
 export class RegisterDto {
     @ApiProperty()
     @IsNotEmpty({message:"El nombre no puede estar vacío"})
@@ -13,7 +13,10 @@ export class RegisterDto {
     email:string;
     @ApiProperty()
     @IsNotEmpty({message:"La contraseña no puede estar vacía"})
-    password: string;
+    password: string;    
+    @ApiProperty({ type: 'string', format: 'binary' })
+    @IsNotEmpty()
+    profile_photo: string;
     constructor(data?:{name,nickname,email,password}) {
         if (data) {
             this.name = data.name;

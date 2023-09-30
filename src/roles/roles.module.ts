@@ -8,9 +8,10 @@ import { User } from 'src/users/Entities/user.entity';
 import { Role } from './entities/role.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmailModule } from 'src/global/email/email.module';
+import { FileUploadModule } from 'src/global/supabase/fileUpload.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User,Role]),EmailModule],
+  imports:[TypeOrmModule.forFeature([User,Role]),EmailModule,FileUploadModule],
   controllers: [RolesController],
   providers: [RolesService,UsersService],
 })

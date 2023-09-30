@@ -10,10 +10,10 @@ export class User {
   @Column({ length: 50, nullable: false })
  public name: string;
 
-  @Column({ length: 10, nullable: false })
+  @Column({ length: 20, nullable: false })
   nickname: string;
 
-  @Column({ length: 50, unique: true }) // Añadir la opción unique para garantizar correos electrónicos únicos
+  @Column({ length: 100, unique: true }) // Añadir la opción unique para garantizar correos electrónicos únicos
  public email: string;
 
   @Column({ length: 500, nullable: false })
@@ -27,6 +27,8 @@ export class User {
   isBan: boolean;
   @ManyToOne(() => Role, role => role.id) // Define la relación muchos a uno con Role
   role: Role;
+  @Column({default:""})
+  photo_profile: string
 
   @BeforeInsert()
   validateName() {    
