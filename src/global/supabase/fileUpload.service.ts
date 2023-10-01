@@ -6,15 +6,17 @@ import { FileType } from './FileType.enum';
 @Injectable()
 export class FileUploadService {
     async upload(fileData: string): Promise<string> {
-        await this.validatorFile(fileData,[FileType.Imagen],5)
-        try {          
+        const subString = fileData.split(",",2)
+        await this.validatorFile(subString[0],[FileType.Image],5)
+        try {                      
             const supabase = await createClient(config.url, config.token)
-            const buffer = Buffer.from(fileData, 'base64');
+            const buffer = Buffer.from(subString[1], 'base64');   
+            console.log(subString[1].substring(0,5))             
             const nameFile = `${config.folder}/${Date.now()}.png`;
             const uploadData = await supabase
                 .storage
                 .from(config.bucketName)
-                .upload(nameFile, buffer, {
+                .upload(nameFile, buffer.buffer, {
                     cacheControl: '3600',
                     upsert: true
                 })
@@ -36,7 +38,7 @@ export class FileUploadService {
         let isType:boolean = false;
         types.forEach((type, idx) => {
             switch (type) {
-                case FileType.Imagen:
+                case FileType.Image:
                     if (infoData.includes("image/")) {isType = true; return true}
                     break;                
                 default:

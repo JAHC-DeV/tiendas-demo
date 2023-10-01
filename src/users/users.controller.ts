@@ -4,7 +4,7 @@ import { RegisterDto } from './Dto/RegisterDto';
 import { NeedLoginGuard } from 'src/Guard/needLogin.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { OnlyAdmin } from 'src/Guard/onlyAdmin.guard';
-import { AssingRoleDto } from './Dto/AssingRoleDto';
+import { AssignRoleDto } from './Dto/AssignRoleDto';
 import { EmailService } from 'src/global/email/email.service';
 
 
@@ -27,8 +27,8 @@ export class UsersController {
   @ApiBearerAuth()
   @UseGuards(OnlyAdmin)
   @Post("/updateRole")
-  async assingNewRole(@Body(ValidationPipe) assingRoleDto: AssingRoleDto) {
-    return this.service.assingRole(assingRoleDto);
+  async assignNewRole(@Body(ValidationPipe) assignRoleDto: AssignRoleDto) {
+    return this.service.assignRole(assignRoleDto);
   }
 
   @ApiBearerAuth()

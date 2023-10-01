@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './Entities/user.entity';
-import { FindOperator, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { RegisterDto } from './Dto/RegisterDto';
 import { Role } from '../roles/entities/role.entity';
 import { LoginRequestDto } from 'src/auth/Dto/LoginRequestDto';
 import * as bcrypt from 'bcrypt';
-import { AssingRoleDto } from './Dto/AssingRoleDto';
+import { AssignRoleDto } from './Dto/AssignRoleDto';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/global/email/email.service';
 import { FileUploadService } from 'src/global/supabase/fileUpload.service';
@@ -70,19 +70,15 @@ export class UsersService {
         }
     }
     async findOneById(id: number): Promise<User> {
-        try {
             const user = await this.userRepository.findOne({ where: { id }, relations: ['role'] });
+            if(user == null)   throw new HttpException("Usuario no encontrado.", HttpStatus.BAD_REQUEST);
             return user;
-        } catch (error) {
-            throw new HttpException("Usuario no encontrado.", HttpStatus.BAD_REQUEST);
-        }
-
     }
 
-    async assingRole(assingRole: AssingRoleDto) {
-        const user = await this.findOneById(assingRole.userId);
+    async assignRole(_assignRole: AssignRoleDto) {
+        const user = await this.findOneById(_assignRole.userId);
         //console.log(user);
-        const role = await this.roleRepository.findOne({ where: { id: assingRole.roleId } });
+        const role = await this.roleRepository.findOne({ where: { id: _assignRole.roleId } });
         if (user == undefined) throw new HttpException("Usuario no encontrado.", HttpStatus.BAD_REQUEST);
         if (role == undefined) throw new HttpException("Rol no encontrado.", HttpStatus.BAD_REQUEST);
         user.role = role;

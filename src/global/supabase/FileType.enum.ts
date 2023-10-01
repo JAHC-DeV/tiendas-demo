@@ -1,5 +1,5 @@
 export enum FileType{
-    Imagen,
+    Image,
     Video,
     Documents
 }

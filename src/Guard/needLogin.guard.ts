@@ -26,7 +26,6 @@ import { BaseGuard } from './baseGuard.guard';
         );
         //console.log(payload);
         //   const userData = await this.userService.findOneById(payload._id);     
-       // if(!userData.role.isAdmin) throw new HttpException("No tienes permisos solo admin",HttpStatus.UNAUTHORIZED);
         // 💡 We're assigning the payload to the request object here
         // so that we can access it in our route handlers
         request['user'] = payload;

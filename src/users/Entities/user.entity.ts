@@ -8,30 +8,30 @@ export class User {
   id: number;
 
   @Column({ length: 50, nullable: false })
- public name: string;
+  public name: string;
 
   @Column({ length: 20, nullable: false })
-  nickname: string;
+  public nickname: string;
 
   @Column({ length: 100, unique: true }) // Añadir la opción unique para garantizar correos electrónicos únicos
- public email: string;
+  public email: string;
 
   @Column({ length: 500, nullable: false })
 
-  password: string;
+  public password: string;
 
   @Column({ default: false })
-  isEnable: boolean;
+  public  isEnable: boolean;
 
   @Column({ default: false })
-  isBan: boolean;
+  public isBan: boolean;
   @ManyToOne(() => Role, role => role.id) // Define la relación muchos a uno con Role
-  role: Role;
-  @Column({default:""})
-  photo_profile: string
+  public  role: Role;
+  @Column({ default: "" })
+  public photo_profile: string
 
   @BeforeInsert()
-  validateName() {    
+  validateName() {
     if (!this.name || this.name.trim() === '') {
       throw new Error('El campo "name" es requerido y no puede estar vacío.');
     }
