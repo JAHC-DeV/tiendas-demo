@@ -54,8 +54,8 @@ export class EmailService {
       <body>
           <div class="container">
               <h1>Bienvenido a Encarguitos</h1>
-              <p>Bienvenido a nuestra plataforma de Ventas y Administracion. ¡Unete ahora!</p>
-              <a href="http://localhost:3000/user/active/${token}" class="button">Verificar Correo</a>
+              <p>Bienvenido a nuestra plataforma de Ventas y Administración. ¡Únete ahora!</p>
+              <a href="http://localhost:3000/users/active/${token}" class="button">Verificar Correo</a>
           </div>
       </body>
       </html>

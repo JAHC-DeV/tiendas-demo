@@ -10,6 +10,7 @@ import { AssignRoleDto } from './Dto/AssignRoleDto';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/global/email/email.service';
 import { FileUploadService } from 'src/global/supabase/fileUpload.service';
+import { jwtConstants } from 'src/auth/constants';
 
 @Injectable()
 export class UsersService {
@@ -38,13 +39,13 @@ export class UsersService {
             .getMany();
         if (count < 1) { newUser.isEnable = true; newUser.role = roles[0]; }
         else newUser.role = roles[1];
-        const passEncript = await bcrypt.hash(newUser.password, 10);
+        const passEncrypt = await bcrypt.hash(newUser.password, 10);
         console.log("Nuevo Usuario Creado");
-        newUser.password = passEncript;
+        newUser.password = passEncrypt;
         const link_photo = await this.fileUpload.upload(registerData.profile_photo);
         newUser.photo_profile = link_photo;
         await this.userRepository.insert(newUser);
-        //Metodo para enviar y validar Email
+        //Método para enviar y validar Email
         const payload = { id: newUser.id, name: newUser.nickname }
         const token = this.jwtService.sign(payload);
         this.emailService.sendEmail(newUser.email, "Bienvenido", token);
@@ -70,9 +71,9 @@ export class UsersService {
         }
     }
     async findOneById(id: number): Promise<User> {
-            const user = await this.userRepository.findOne({ where: { id }, relations: ['role'] });
-            if(user == null)   throw new HttpException("Usuario no encontrado.", HttpStatus.BAD_REQUEST);
-            return user;
+        const user = await this.userRepository.findOne({ where: { id }, relations: ['role'] });        
+        if (!user) throw new HttpException("Usuario no encontrado.", HttpStatus.BAD_REQUEST);
+        return user;
     }
 
     async assignRole(_assignRole: AssignRoleDto) {
@@ -93,7 +94,23 @@ export class UsersService {
     }
 
     async activateAccount(token: string) {
-
+        let payload;
+        try {
+            payload = await this.jwtService.verifyAsync(
+                token,
+                {
+                    secret: jwtConstants.secret
+                }
+            );
+        } catch (error) {
+            throw new HttpException("Usuario no Valido.", HttpStatus.FORBIDDEN);
+        }
+        const tempUser = await this.findOneById(payload.id)
+        console.log(payload.id);
+        if(tempUser.isEnable == true) throw new HttpException("Usuario ya activo.",HttpStatus.BAD_REQUEST);
+        tempUser.isEnable = true;
+        await this.userRepository.save(tempUser);
+        return HttpStatus.OK;
     }
 
 

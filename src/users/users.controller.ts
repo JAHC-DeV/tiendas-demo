@@ -19,7 +19,6 @@ export class UsersController {
   }
 
   @Post()
-
   async createUser(@Body(ValidationPipe) userData: RegisterDto) {
     return await this.service.createUser(userData)
   }
@@ -37,6 +36,8 @@ export class UsersController {
   async removeUser(@Param('id') id: number) {
     this.service.removeUser(id);
   }
-
-  
+   @Get("/active/:token")
+  async activeUser(@Param("token") token:string){
+      return this.service.activateAccount(token);
+  }
 }
