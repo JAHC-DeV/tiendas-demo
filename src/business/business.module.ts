@@ -13,6 +13,7 @@ import * as express from 'express';
   imports:[TypeOrmModule.forFeature([Business,User]),UsersModule,FileUploadModule],
   controllers: [BusinessController],
   providers: [BusinessService],
+  exports:[BusinessService]
 })
 export class BusinessModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

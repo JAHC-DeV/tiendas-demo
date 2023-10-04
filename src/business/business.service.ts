@@ -7,15 +7,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
 import { FileUploadService } from 'src/global/supabase/fileUpload.service';
 import { UpdateImgDto} from './dto/updateImg-business.dto';
+import { Product } from 'src/product/entities/product.entity';
 
 @Injectable()
 export class BusinessService {
+
   constructor(
     @InjectRepository(Business)
     private businessRepository: Repository<Business>,
     private usersService: UsersService,
     private fileUpload: FileUploadService) { }
-
+  
   async create(createBusinessDto: CreateBusinessDto, userData: any) {
     const user = await this.usersService.findOneById(userData._id);
     const tempBusiness = this.businessRepository.create(createBusinessDto);
@@ -25,8 +27,7 @@ export class BusinessService {
       tempBusiness.cover_URL = await this.fileUpload.upload(createBusinessDto.cover);
     tempBusiness.slug = createBusinessDto.name.replace(" ", "-").toLowerCase();
     tempBusiness.owner = user;
-    await this.businessRepository.insert(tempBusiness);
-    console.log("Nuevo Negocio Creado.")
+    await this.businessRepository.insert(tempBusiness);    
     return HttpStatus.CREATED;
   }
   async findAll() {
@@ -45,10 +46,19 @@ export class BusinessService {
       return await this.businessRepository.findOne({ where: { id } });
   }
   async findOneBySlug(slug: string) {
-    const tempBusiness = await this.businessRepository.findOne({ where: { slug, isActive:true} });
+    const tempBusiness = await this.businessRepository.findOne({ where: { slug, isActive:true},relations:["products"] });
     if(!tempBusiness) throw new HttpException("Negocio no Encontrado.",HttpStatus.NOT_FOUND);
     return tempBusiness;
   }
+  
+  async findByOwner(idOwn:number){
+        const business = await this.businessRepository.createQueryBuilder("business")
+                                   .where("business.ownerId = :id",{id:idOwn})
+                                   .getOne();                                   
+        if(!business) throw new HttpException("Negocio no encontrado.",HttpStatus.NOT_FOUND);                             
+        return business;                                   
+  }
+
   async update(id: number, updateBusinessDto: UpdateBusinessDto, userData: any) {   
     const tempBusiness = await this.findOneById(id,true);    
     if (tempBusiness.owner?.id != userData._id) throw new HttpException("Acción no Permitida.", HttpStatus.UNAUTHORIZED);

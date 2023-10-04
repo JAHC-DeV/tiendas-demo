@@ -1,6 +1,7 @@
+import { Product } from "src/product/entities/product.entity";
 import { Role } from "src/roles/entities/role.entity";
 import { User } from "src/users/Entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('business')
 export class Business {
@@ -22,6 +23,8 @@ export class Business {
     slug: string;
     @ManyToOne(() => User, user => user.id)
     owner: User;
+    @OneToMany(()=> Product,product => product.owner)
+    products:Product[];
     @Column({ nullable: false })
     category: string;
     @Column({ default: 0 })
