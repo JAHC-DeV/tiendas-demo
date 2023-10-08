@@ -4,8 +4,10 @@ import { SearchRequestDto } from 'src/Models/Dto/SearchRequestDto';
 import { SearchResponseDto } from 'src/Models/Dto/SearchResponseDto';
 import { ProductModel } from 'src/Models/ProductModel';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('newegg-api')
+@ApiTags("External")
 export class NeweggApiController {
   constructor(private readonly service: NeweggApiService) { }
 

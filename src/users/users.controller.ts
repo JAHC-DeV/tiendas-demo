@@ -2,13 +2,14 @@ import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, Us
 import { UsersService } from './users.service';
 import { RegisterDto } from './Dto/RegisterDto';
 import { NeedLoginGuard } from 'src/Guard/needLogin.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { OnlyAdmin } from 'src/Guard/onlyAdmin.guard';
 import { AssignRoleDto } from './Dto/AssignRoleDto';
 import { EmailService } from 'src/global/email/email.service';
 
 
 @Controller('users')
+@ApiTags('User')
 export class UsersController {
   constructor(private readonly service: UsersService,private readonly email:EmailService) { }
   @ApiBearerAuth()

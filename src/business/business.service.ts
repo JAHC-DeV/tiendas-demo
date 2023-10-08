@@ -84,4 +84,10 @@ export class BusinessService {
     const business = await this.findOneById(id);
     await this.businessRepository.remove(business as Business);
   }
+
+  async validateIsActive(id: number): Promise<Business> {
+    const business = await this.findOneById(id);    
+    if (!business.isActive) throw new HttpException("Negocio no Activo.", HttpStatus.BAD_REQUEST);
+    return business;
+  }
 }

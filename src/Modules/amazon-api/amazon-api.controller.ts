@@ -2,8 +2,10 @@ import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AmazonApiService } from './amazon-api.service';
 import { SearchRequestDto } from 'src/Models/Dto/SearchRequestDto';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('amazon-api')
+@ApiTags("External")
 export class AmazonApiController {
   constructor(private readonly service: AmazonApiService) { }
 

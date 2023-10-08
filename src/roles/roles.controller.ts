@@ -3,10 +3,11 @@ import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { OnlyAdmin } from 'src/Guard/onlyAdmin.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiBearerAuth()
 @UseGuards(OnlyAdmin)
 @Controller('roles')
+@ApiTags("User")
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
  

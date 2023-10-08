@@ -64,7 +64,7 @@ export class UsersService {
     }
     async findOneByEmail(userInfo: LoginRequestDto): Promise<User> {
         try {
-            const user = await this.userRepository.findOne({ relations: ['role'], where: { email: userInfo.email } });
+            const user = await this.userRepository.findOne({ relations: ['role','business'], where: { email: userInfo.email } });
             return user;
         } catch (error) {
             throw new HttpException("Usuario no encontrado.", HttpStatus.BAD_REQUEST);

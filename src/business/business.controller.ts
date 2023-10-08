@@ -3,12 +3,13 @@ import { BusinessService } from './business.service';
 import { CreateBusinessDto } from './dto/create-business.dto';
 import { UpdateBusinessDto } from './dto/update-business.dto';
 import { NeedLoginGuard } from 'src/Guard/needLogin.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { OnlyAdmin } from 'src/Guard/onlyAdmin.guard';
 import { Request } from 'express'
 import { UpdateImgDto } from './dto/updateImg-business.dto';
 
 @Controller('business')
+@ApiTags('Business')
 export class BusinessController {
   constructor(private readonly businessService: BusinessService) { }
 

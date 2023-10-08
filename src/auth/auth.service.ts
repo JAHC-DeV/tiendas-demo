@@ -12,16 +12,17 @@ export class AuthService {
     ) { }
     async login(loginData: LoginRequestDto) {
         const userInfo = await this.usersService.findOneByEmail(loginData);
+       // console.log(userInfo)
         if (!userInfo) throw new HttpException("No esta registrado", HttpStatus.UNAUTHORIZED)
         const passValid = await bcrypt.compare(loginData.password, userInfo.password);
         if (!passValid) throw new HttpException("Contraseña incorrecta", HttpStatus.UNAUTHORIZED);
         if (userInfo.isEnable == false) throw new HttpException("Usuario no activo revise su Email", HttpStatus.UNAUTHORIZED);
         try {
             delete userInfo.password;
-            console.log(userInfo)
-            const payload = { _id: userInfo.id, _name: userInfo.nickname };
+            const payload = { _id: userInfo.id, _name: userInfo.nickname, _business:userInfo?.business?.id };
             const token = await this.jwtService.signAsync(payload);
-            return new LoginResponseDto({ userInfo, hasBusiness: false, token });
+            const hasBusiness = userInfo.business != null ? true : false; 
+            return new LoginResponseDto({ userInfo, hasBusiness, token });
         } catch (error) {
             console.log(error)
             throw new HttpException("Error al inicial", HttpStatus.UNAUTHORIZED);
