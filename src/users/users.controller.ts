@@ -26,7 +26,7 @@ export class UsersController {
 
   @ApiBearerAuth()
   @UseGuards(OnlyAdmin)
-  @Post("/updateRole")
+  @Post('/updateRole')
   async assignNewRole(@Body(ValidationPipe) assignRoleDto: AssignRoleDto) {
     return this.service.assignRole(assignRoleDto);
   }
@@ -37,8 +37,8 @@ export class UsersController {
   async removeUser(@Param('id') id: number) {
     this.service.removeUser(id);
   }
-   @Get("/active/:token")
-  async activeUser(@Param("token") token:string){
-      return this.service.activateAccount(token);
+  @Get('/active/:token')
+  async activeUser(@Param('token') token: string) {
+    return this.service.activateAccount(token);
   }
 }

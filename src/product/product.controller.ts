@@ -41,12 +41,15 @@ export class ProductController {
   findOneBySlug(@Param('slugB') slugB: string,@Param('slug') slug: string) {
     return this.productService.findOneBySlug(slugB,slug);
   }
-
+  @ApiBearerAuth()
+  @UseGuards(HasBusiness)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto,@Req() request:Request) {
     const user = request["user"];  
     return await this.productService.update(+id, updateProductDto,user);
   }
+  @ApiBearerAuth()
+  @UseGuards(HasBusiness)
   @Patch('/img/:id')
   async updateImg(@Param('id') id: string, @Body() updateProductDto: UpdateImgDto,@Req() request:Request) {
     const user = request["user"];  
