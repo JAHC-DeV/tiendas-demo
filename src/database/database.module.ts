@@ -8,8 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       host: 'localhost', // Cambia a la dirección de tu base de datos
       port: 3306, // Cambia al puerto de tu base de datos
       username: 'root',
-      password: 'Jose2112*',
-      database: 'encarguitos',
+      password: '**',
+      database: 'tiendas',
       entities: [
         __dirname + '/../**/*.entity{.ts,.js}',
       ],
