@@ -58,5 +58,5 @@ Describe aquí cómo utilizar la API para interactuar con las tiendas online inc
 
 ## Autores
 
-- [Tu Nombre](https://github.com/JAHC-DeV) - Desarrollador Backend
+- [JAHC-DeV](https://github.com/JAHC-DeV) - Desarrollador Backend
 
